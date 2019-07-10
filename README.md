@@ -20,29 +20,32 @@ allprojects {
     implementation 'com.trello.rxlifecycle2:rxlifecycle:2.1.0'
     implementation 'com.trello.rxlifecycle2:rxlifecycle-components:2.1.0'  
 3.
-   implementation project(':retrofitlibrary')
+   implementation project(':retrofithlibrary')
 4.基本用法
  在Application中onCreate()方法里进行注册：
+ 必须：
   RetrofitHLibrary.init(this, BaseUrl);
-  RetrofitHLibrary.getHttpConfigure().setNotTipDialog(true);　// 网络请求基础配置类,是否显示日志、超时时长　等（可选）
+ 可选：
+  RetrofitHLibrary.getmHttpConfigure().showLog(true);//设置开启日志，（默认为关闭）
+  RetrofitHLibrary.getmHttpConfigure().setTipDialog(true);//设置请求出错时 显示dialog（默认为关闭）
 onTerminate()方法里进行注销：
  RetrofitHLibrary.onDestory();
 5.
-  RetrofitLibrary.getRetrofitHttp()
+  RetrofitHLibrary.getRetrofitHttp()
        .post()　//请求方式
        .apiUrl(url地址)
        .addParameter(map)　// 参数类型
        .build()
-       .request(new HttpObserver<Ｔ(实体类)>(context, true, true) { //(Context, 是否加载弹窗, 点击返回键是否取消加载弹窗)多个重载方法
+       .request(new HttpObserver<Ｔ(实体类)>(context, true) { //(Context, 是否加载弹窗)多个重载方法
          
                 /**
                  * 上传进度回调
                  *
-                 * @param action       标识（请求不设置，默认是apiUrl）
-                 * @param value        返回结果
+                 * @param tag       标识（请求不设置，默认是apiUrl）
+                 * @param response        返回结果
                  */
                 @Override
-                public void onSuccess(String action, T value) {
+                public void onSuccess(String tag, T response) {
                
                 }
                 
@@ -58,7 +61,7 @@ onTerminate()方法里进行注销：
        .upload(new UploadObserver<T(实体类)>(context, false){//(Context, 是否加载弹窗)、无参数构造器
  
                 @Override
-                public void onSuccess(String action, T value) {
+                public void onSuccess(String tag, T response) {
                
                 }
                 
