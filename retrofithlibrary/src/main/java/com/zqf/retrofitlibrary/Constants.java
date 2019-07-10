@@ -9,7 +9,12 @@ public class Constants {
     /**
      * 日志: 默认显示
      */
-    public static final boolean SHOW_LOG = true;
+    public static final boolean SHOW_LOG = false;
+
+    /**
+     * 请求失败dialog: 默认不显示
+     */
+    public static final boolean SHOW_TipDialog = false;
 
 
 }

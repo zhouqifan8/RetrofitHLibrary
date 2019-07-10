@@ -9,7 +9,8 @@ public class app extends Application {
     public void onCreate() {
         super.onCreate();
         RetrofitHLibrary.init(this, UrlConstans.DEF_TEST_SERVER);//初始化
-        RetrofitHLibrary.getmHttpConfigure().showLog(true);//设置开启日志，（默认为开启，上线时设为false）
+        RetrofitHLibrary.getmHttpConfigure().showLog(true);//设置开启日志，（默认为关闭）
+        RetrofitHLibrary.getmHttpConfigure().setTipDialog(true);
     }
 
     @Override

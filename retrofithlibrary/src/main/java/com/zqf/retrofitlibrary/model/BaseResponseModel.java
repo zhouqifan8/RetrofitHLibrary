@@ -9,23 +9,26 @@ public class BaseResponseModel<T> {
         return code;
     }
 
-    public void setCode(int code) {
+    public BaseResponseModel<T> setCode(int code) {
         this.code = code;
+        return this;
     }
 
     public String getMsg() {
         return msg;
     }
 
-    public void setMsg(String msg) {
+    public BaseResponseModel<T> setMsg(String msg) {
         this.msg = msg;
+        return this;
     }
 
     public T getData() {
         return data;
     }
 
-    public void setData(T data) {
+    public BaseResponseModel<T> setData(T data) {
         this.data = data;
+        return this;
     }
 }

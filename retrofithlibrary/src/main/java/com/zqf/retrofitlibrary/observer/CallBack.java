@@ -10,19 +10,21 @@ interface CallBack<T> {
     /**
      * 成功回调
      *
-     * @param action
-     * @param value
+     * @param tag
+     * @param response
      */
-    void onSuccess(String action, T value);
+    void onSuccess(String tag, T response);
 
     /**
      * 失败回调
      *
-     * @param action
+     * @param tag
      * @param code
      * @param msg
      */
-    void onError(String action, int code, String msg);
+    void onError(String tag, int code, String msg);
+
+    void isLoginToken();
 
     /**
      * 取消回调

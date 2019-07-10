@@ -493,6 +493,8 @@ public class RetrofitHttp {
         Map<String, Object> header;
         /*是否显示Log*/
         boolean showLog;
+        /*是否显示TipDialog*/
+        boolean showTipDialog;
 
 
         public static Configure get() {
@@ -506,7 +508,8 @@ public class RetrofitHttp {
         public Configure() {
             timeout = Constants.TIME_OUT;//默认60秒
             timeUnit = TimeUnit.SECONDS;//默认秒
-            showLog = Constants.SHOW_LOG;//默认打印LOG
+            showLog = Constants.SHOW_LOG;//默认关闭LOG
+            showTipDialog = Constants.SHOW_TipDialog;//请求失败默认关闭dialog
         }
 
         /*请求基础路径*/
@@ -564,6 +567,16 @@ public class RetrofitHttp {
 
         public boolean isShowLog() {
             return showLog;
+        }
+
+        /*是否显示TipDialog*/
+        public RetrofitHttp.Configure setTipDialog(boolean showTipDialog) {
+            this.showTipDialog = showTipDialog;
+            return this;
+        }
+
+        public boolean isShowTipDialog() {
+            return showTipDialog;
         }
 
         /*时间单位*/

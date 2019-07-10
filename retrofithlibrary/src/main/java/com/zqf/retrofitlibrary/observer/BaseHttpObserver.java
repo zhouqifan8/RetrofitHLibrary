@@ -7,6 +7,7 @@ import com.zqf.retrofitlibrary.RetrofitHLibrary;
 import com.zqf.retrofitlibrary.RetrofitHttp;
 import com.zqf.retrofitlibrary.exception.ApiException;
 import com.zqf.retrofitlibrary.exception.ExceptionEngine;
+import com.zqf.retrofitlibrary.model.BaseResponseModel;
 import com.zqf.retrofitlibrary.utils.LogUtils;
 import com.zqf.retrofitlibrary.utils.ThreadUtils;
 import com.google.gson.Gson;
@@ -22,11 +23,7 @@ import io.reactivex.annotations.NonNull;
  * Http请求回调
  */
 public abstract class BaseHttpObserver<T> extends BaseObserver<T> implements CallBack<T> {
-
-    /**
-     * 使用提示弹出窗 :默认弹窗－false
-     */
-    protected boolean isNotTipDialog;
+    private BaseResponseModel mResponse;
 
     public BaseHttpObserver() {
     }
@@ -65,43 +62,49 @@ public abstract class BaseHttpObserver<T> extends BaseObserver<T> implements Cal
     /**
      * 请求成功
      *
-     * @param action
-     * @param value
+     * @param tag
+     * @param response
      */
-    private void inSuccess(String action, T value) {
-        T result = parse((String) value);
-        if (callSuccess && result != null) {
-            onSuccess(action, result);
+    private void inSuccess(String tag, T response) {
+        T result = null;
+        mResponse = new Gson().fromJson((String) response, BaseResponseModel.class);
+        int code = mResponse.getCode();
+        switch (code) {
+            case 200://成功
+                try {
+                    result = onConvert(new Gson().fromJson((String) response, getTypeClass()));
+                    callSuccess = true;
+                } catch (JSONException e) {
+                    callSuccess = false;
+                    onError(getTag(), ExceptionEngine.ANALYTIC_CLIENT_DATA_ERROR, RetrofitHLibrary.getAppString(R.string.data_parsing_error));
+                }
+                if (callSuccess && response != null) {
+                    onSuccess(tag, result);
+                }
+                break;
+            case 222://token过期、异地登录，跳转登录页面重新登录
+                isLoginToken();
+                break;
+            default://统一为错误处理
+                onError(getTag(), code, mResponse.getMsg());
+                break;
         }
     }
 
-    /**
-     * 解析数据
-     *
-     * @param data
-     * @return
-     */
-    private T parse(String data) {
-        T t = null;
-        try {
-            t = onConvert(new Gson().fromJson(data, getTypeClass()));
-            callSuccess = true;
-        } catch (JSONException e) {
-            callSuccess = false;
-            onError(getTag(), ExceptionEngine.ANALYTIC_CLIENT_DATA_ERROR, RetrofitHLibrary.getAppString(R.string.data_parsing_error));
-        }
-        return t;
+    @Override
+    public void isLoginToken() {
+
     }
 
     /**
      * 请求出错
      *
-     * @param action
+     * @param tag
      * @param code
-     * @param desc
+     * @param msg
      */
-    private void inError(String action, int code, String desc) {
-        onError(action, code, desc);
+    private void inError(String tag, int code, String msg) {
+        onError(tag, code, msg);
     }
 
     /**
@@ -143,14 +146,4 @@ public abstract class BaseHttpObserver<T> extends BaseObserver<T> implements Cal
         return type;
     }
 
-    /**
-     * 使用提示弹出窗
-     *
-     * @param notTipDialog 默认弹窗－false
-     * @return
-     */
-    public BaseHttpObserver<T> setNotTipDialog(boolean notTipDialog) {
-        isNotTipDialog = notTipDialog;
-        return this;
-    }
 }

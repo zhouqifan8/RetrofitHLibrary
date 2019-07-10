@@ -1,6 +1,7 @@
 package com.zqf.retrofitlibrary.utils;
 
 import com.zqf.retrofitlibrary.HttpLoggingInterceptor;
+import com.zqf.retrofitlibrary.RetrofitHLibrary;
 import com.zqf.retrofitlibrary.RetrofitHttp;
 
 import java.util.Map;
@@ -119,9 +120,12 @@ public class RetrofitUtils {
     public OkHttpClient getOkHttpClientBase(final Map<String, Object> headerMap) {
         //日志拦截器
         HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor(message -> LogUtils.i("okHttp:" + message));
-        //must
-        logInterceptor.setLevel(RetrofitHttp.Configure.get().isShowLog() ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
 
+        if (RetrofitHLibrary.getmHttpConfigure().isShowLog()) {
+            logInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        } else {
+            logInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
+        }
         //Header 拦截器
         Interceptor headerInterceptor = chain -> {
             Request request = chain.request();
