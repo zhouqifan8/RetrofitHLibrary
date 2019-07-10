@@ -11,7 +11,7 @@ import android.util.Log;
  */
 public class LogUtils {
 
-    private static final String TAG = "log_yong";
+    private static final String TAG = "log_fan";
 
     LogUtils() {
         throw new IllegalStateException("LogUtils class");
